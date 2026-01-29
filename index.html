@@ -53,7 +53,7 @@
 
     .hero{display:grid;grid-template-columns:1fr;gap:24px;align-items:start;padding-top:12px;margin-bottom:12px}
     .card{background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01)); border:1px solid rgba(148,163,184,.14); box-shadow:0 10px 40px rgba(0,0,0,.35); border-radius:var(--radius)}
-    .headline{margin:0 0 8px;font-size:clamp(26px,3.4vw,40px)}
+    .headline{margin:0 0 8px;font-size:clamp(26px,3.4vw,40px);text-align:center}
     .sub{margin:0 0 8px;color:var(--muted)}
   .pill-list{  display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;margin-bottom:20px;justify-content:center; /* add space here */}
     .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(148,163,184,.15);color:#f1f5f9;border:1px solid rgba(148,163,184,.2);font-size:14px}
@@ -62,6 +62,34 @@
     .gallery{display:block;overflow-y:auto;max-height:calc(var(--gallery-visible) * var(--gallery-img-est) + (var(--gallery-visible) - 1) * var(--gallery-gap));padding-right:4px}
     .gallery img{width:100%;height:auto;display:block;border-radius:12px;border:1px solid rgba(148,163,184,.14);box-shadow:0 6px 20px rgba(0,0,0,.25);filter:saturate(1.03) contrast(1.02);margin-bottom:var(--gallery-gap)}
     .gallery img:last-child{margin-bottom:0}
+
+    /* Slideshow styles */
+    .slideshow{position:relative;overflow:hidden;border-radius:12px}
+    .slides{position:relative;height:auto}
+    .slide{position:absolute;inset:0;width:100%;height:auto;opacity:0;transition:opacity .4s ease;border-radius:12px;border:1px solid rgba(148,163,184,.14);box-shadow:0 6px 20px rgba(0,0,0,.25);filter:saturate(1.03) contrast(1.02)}
+    .slide.active{position:relative;opacity:1}
+    .slide img{width:100%;height:auto;display:block;border-radius:12px}
+    .slide[aria-hidden="true"]{pointer-events:none}
+
+    /* Ken Burns-style subtle motion + blur for interest */
+    @keyframes kenburns {
+      0%   { transform: scale(1.05) translate(0, 0); }
+      50%  { transform: scale(1.08) translate(-1.2%, -1.2%); }
+      100% { transform: scale(1.10) translate(1.4%, 1.4%); }
+    }
+    .slide.active img{ 
+      animation: kenburns 5s ease-in-out both;
+      will-change: transform;
+      filter: blur(2px) saturate(1.02) contrast(1.02);
+      transform-origin: center;
+    }
+
+    .slide-btn{position:absolute;top:50%;transform:translateY(-50%);background:rgba(2,6,23,.45);color:var(--text);border:none;border-radius:999px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(4px);box-shadow:0 2px 10px rgba(0,0,0,.25)}
+    .slide-btn:hover{background:rgba(2,6,23,.6)}
+    .slide-btn.prev{left:12px}
+    .slide-btn.next{right:12px}
+
+    .overlay-link{position:absolute;bottom:12px;right:12px;padding:10px 14px;border-radius:999px;background:linear-gradient(90deg,var(--brand),var(--brand-2));color:#0b0b0b;font-weight:800;text-decoration:none;box-shadow:0 4px 20px rgba(0,0,0,.35)}
 
     .split{display:grid;grid-template-columns:1fr;gap:20px}
     .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -114,22 +142,27 @@
         </div>
       </div>
       <div class="card" style="padding:14px">
-        <div class="gallery">
-          <img src="images/project1.jpg" alt="Concrete project 1" loading="lazy" />
-          <img src="images/project2.jpg" alt="Concrete project 2" loading="lazy" />
-          <img src="images/project3.jpg" alt="Concrete project 3" loading="lazy" />
-          <img src="images/project4.jpg" alt="Concrete project 4" loading="lazy" />
-          <img src="images/project5.jpg" alt="Concrete project 5" loading="lazy" />
-          <img src="images/project7.jpg" alt="Concrete project 7" loading="lazy" />
-          <img src="images/project8.jpg" alt="Concrete project 8" loading="lazy" />
-          <img src="images/project9.jpg" alt="Concrete project 9" loading="lazy" />
-          <img src="images/project10.jpg" alt="Concrete project 10" loading="lazy" />
-          <img src="images/project11.jpg" alt="Concrete project 11" loading="lazy" />
-          <img src="images/project12.jpg" alt="Concrete project 12" loading="lazy" />
-          <img src="images/project13.jpg" alt="Concrete project 13" loading="lazy" />
-          <img src="images/project14.jpg" alt="Concrete project 14" loading="lazy" />
-          <img src="images/project15.jpg" alt="Concrete project 15" loading="lazy" />
-          <img src="images/project16.jpg" alt="Concrete project 16" loading="lazy" />
+        <div class="slideshow" aria-label="Project slideshow">
+          <div class="slides">
+            <div class="slide active"><img src="images/project1.jpg" alt="Concrete project 1" loading="lazy" /></div>
+            <div class="slide"><img src="images/project2.jpg" alt="Concrete project 2" loading="lazy" /></div>
+            <div class="slide"><img src="images/project3.jpg" alt="Concrete project 3" loading="lazy" /></div>
+            <div class="slide"><img src="images/project4.jpg" alt="Concrete project 4" loading="lazy" /></div>
+            <div class="slide"><img src="images/project5.jpg" alt="Concrete project 5" loading="lazy" /></div>
+            <div class="slide"><img src="images/project7.jpg" alt="Concrete project 7" loading="lazy" /></div>
+            <div class="slide"><img src="images/project8.jpg" alt="Concrete project 8" loading="lazy" /></div>
+            <div class="slide"><img src="images/project9.jpg" alt="Concrete project 9" loading="lazy" /></div>
+            <div class="slide"><img src="images/project10.jpg" alt="Concrete project 10" loading="lazy" /></div>
+            <div class="slide"><img src="images/project11.jpg" alt="Concrete project 11" loading="lazy" /></div>
+            <div class="slide"><img src="images/project12.jpg" alt="Concrete project 12" loading="lazy" /></div>
+            <div class="slide"><img src="images/project13.jpg" alt="Concrete project 13" loading="lazy" /></div>
+            <div class="slide"><img src="images/project14.jpg" alt="Concrete project 14" loading="lazy" /></div>
+            <div class="slide"><img src="images/project15.jpg" alt="Concrete project 15" loading="lazy" /></div>
+            <div class="slide"><img src="images/project16.jpg" alt="Concrete project 16" loading="lazy" /></div>
+          </div>
+          <button class="slide-btn prev" aria-label="Previous slide">‹</button>
+          <button class="slide-btn next" aria-label="Next slide">›</button>
+          <a href="projects.html" class="overlay-link" aria-label="View full image gallery">View Full Gallery</a>
         </div>
       </div>
     </section>
@@ -183,6 +216,42 @@
   <script>
     // Footer year
     document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Simple slideshow logic
+    (function(){
+      const root = document.querySelector('.slideshow');
+      if(!root) return;
+      const slides = Array.from(root.querySelectorAll('.slide'));
+      const prev = root.querySelector('.slide-btn.prev');
+      const next = root.querySelector('.slide-btn.next');
+      let idx = 0;
+
+      function show(i){
+        idx = (i + slides.length) % slides.length;
+        slides.forEach((s, n) => {
+          const active = n === idx;
+          s.classList.toggle('active', active);
+          s.setAttribute('aria-hidden', active ? 'false' : 'true');
+        });
+      }
+
+      prev.addEventListener('click', () => show(idx - 1));
+      next.addEventListener('click', () => show(idx + 1));
+
+      let timer = setInterval(() => show(idx + 1), 5000);
+      root.addEventListener('mouseenter', () => { clearInterval(timer); });
+      root.addEventListener('mouseleave', () => { timer = setInterval(() => show(idx + 1), 5000); });
+
+      // Basic swipe support
+      let startX = null;
+      root.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, {passive:true});
+      root.addEventListener('touchend', (e) => {
+        if(startX === null) return;
+        const dx = e.changedTouches[0].clientX - startX;
+        if(Math.abs(dx) > 40){ dx < 0 ? show(idx + 1) : show(idx - 1); }
+        startX = null;
+      });
+    })();
   </script>
 </body>
 </html>
